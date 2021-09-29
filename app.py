@@ -2,6 +2,7 @@ from flask import Flask,request, jsonify
 import pdfkit 
 import base64
 import os
+import json
 app = Flask(__name__)
 
 # @app.route('/host',methods=['POST' ])
@@ -16,13 +17,15 @@ app = Flask(__name__)
 
 @app.route('/pdf',methods=['POST' ])
 def pdf_convertor():
-    htmlstr = request.form["html"]
+    data = request.get_json()
+    htmlstr = data.get('html', None)
+    #htmlstr = request.form["html"]
+    #json.decoder
+    # path_kit = r'/usr/local/bin/wkhtmltopdf'
+    # config = pdfkit.configuration(wkhtmltopdf=path_kit)
+    # pdfkit.from_string(htmlstr, 'sample.pdf',configuration=config) 
 
-    path_kit = r'/usr/local/bin/wkhtmltopdf'
-    config = pdfkit.configuration(wkhtmltopdf=path_kit)
-    pdfkit.from_string(htmlstr, 'sample.pdf',configuration=config) 
-
-    #pdfkit.from_string(htmlstr, 'sample.pdf')
+    pdfkit.from_string(htmlstr, 'sample.pdf')
     data = open("sample.pdf", "rb").read()
     encoded = base64.b64encode(data)
     if os.path.exists("sample.pdf"):
